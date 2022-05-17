@@ -1,21 +1,11 @@
 package com.example.cloudmessageex;
 
-import static com.pax.market.android.app.sdk.PushConstants.ACTION_DATA_MESSAGE_RECEIVED;
-import static com.pax.market.android.app.sdk.PushConstants.ACTION_NOTIFICATION_CLICK;
-import static com.pax.market.android.app.sdk.PushConstants.ACTION_NOTIFICATION_MESSAGE_RECEIVED;
-import static com.pax.market.android.app.sdk.PushConstants.ACTION_NOTIFY_DATA_MESSAGE_RECEIVED;
-import static com.pax.market.android.app.sdk.PushConstants.ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED;
-import static com.pax.market.android.app.sdk.PushConstants.EXTRA_MEIDA;
-import static com.pax.market.android.app.sdk.PushConstants.EXTRA_MESSAGE_CONTENT;
-import static com.pax.market.android.app.sdk.PushConstants.EXTRA_MESSAGE_DATA;
-import static com.pax.market.android.app.sdk.PushConstants.EXTRA_MESSAGE_NID;
-import static com.pax.market.android.app.sdk.PushConstants.EXTRA_MESSAGE_TITLE;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,11 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.pax.market.android.app.sdk.BaseApiService;
 import com.pax.market.android.app.sdk.Notifications;
 import com.pax.market.android.app.sdk.StoreSdk;
 import com.pax.market.android.app.sdk.dto.MediaMesageInfo;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,81 +39,70 @@ public class MainActivity extends AppCompatActivity {
         return ins;
     }
 
-    protected static class PushMessageReceiver extends BroadcastReceiver {
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "onNewIntent called!");
+        Log.d(TAG, "intent: " + intentToString(intent));
 
-        private static final String TAG = "CloudMessagingEx";
-        private Handler handler = null;
-        private TextView tv_message;
-        private boolean defaultConstructorFlag = false;
+    }
 
-
-
-        public PushMessageReceiver() {
-            Log.d(TAG, "Broadcast receiver default constructor method called");
-            defaultConstructorFlag = true;
+    public static String intentToString(Intent intent) {
+        if (intent == null) {
+            return null;
         }
 
-        public PushMessageReceiver(android.os.Handler handler){ //, TextView tv_message
-            this.handler = handler;
-        }
+        return intent.toString() + " " + bundleToString(intent.getExtras());
+    }
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "Cloud message related broadcast received!");
-            if (ACTION_NOTIFY_DATA_MESSAGE_RECEIVED.equals(intent.getAction())) { // 4.1 Mixed Message
-                Log.i(TAG, "### NOTIFY_DATA_MESSAGE_RECEIVED 4.1");
-                String title = intent.getStringExtra(EXTRA_MESSAGE_TITLE);
-                String content = intent.getStringExtra(EXTRA_MESSAGE_CONTENT);
-                String dataJson = intent.getStringExtra(EXTRA_MESSAGE_DATA);
-                Log.d(TAG, "Notification title: " + title + "\nNotitication content: " + content + "\nData: " + dataJson);
-                Log.d(TAG, "NOTIFY_DATA_MESSAGE_RECEIVED End");
+    public static String bundleToString(Bundle bundle) {
+        StringBuilder out = new StringBuilder("Bundle[");
 
-            } else if (ACTION_DATA_MESSAGE_RECEIVED.equals(intent.getAction())) { // 4.2
-                Log.d(TAG, "### DATA_MESSAGE_RECEIVED 4.2");
-                String dataJson = intent.getStringExtra(EXTRA_MESSAGE_DATA);
-                String title = intent.getStringExtra(EXTRA_MESSAGE_TITLE);
-                String content = intent.getStringExtra(EXTRA_MESSAGE_CONTENT);
+        if (bundle == null) {
+            out.append("null");
+        } else {
+            boolean first = true;
+            for (String key : bundle.keySet()) {
+                if (!first) {
+                    out.append(", ");
+                }
 
-                MainActivity.getInstance().updateOnData(title, content, dataJson);
+                out.append(key).append('=');
 
-                Log.d(TAG,"DATA_MESSAGE_RECEIVED Begin\nData:" + dataJson + "\nDATA_MESSAGE_RECEIVED End");
-                Log.d(TAG, "NOTIFY_DATA_MESSAGE_RECEIVED End");
+                Object value = bundle.get(key);
 
-            } else if (ACTION_NOTIFICATION_MESSAGE_RECEIVED.equals(intent.getAction())) {  // 4.3
-                //else if (ACTION_NOTIFICATION_MESSAGE_RECEIVED.equals(intent.getAction()))
-                Log.d(TAG, "### NOTIFICATION_MESSAGE_RECEIVED Begin 4.3");
-                String title = intent.getStringExtra(EXTRA_MESSAGE_TITLE);
-                String content = intent.getStringExtra(EXTRA_MESSAGE_CONTENT);
+                if (value instanceof int[]) {
+                    out.append(Arrays.toString((int[]) value));
+                } else if (value instanceof byte[]) {
+                    out.append(Arrays.toString((byte[]) value));
+                } else if (value instanceof boolean[]) {
+                    out.append(Arrays.toString((boolean[]) value));
+                } else if (value instanceof short[]) {
+                    out.append(Arrays.toString((short[]) value));
+                } else if (value instanceof long[]) {
+                    out.append(Arrays.toString((long[]) value));
+                } else if (value instanceof float[]) {
+                    out.append(Arrays.toString((float[]) value));
+                } else if (value instanceof double[]) {
+                    out.append(Arrays.toString((double[]) value));
+                } else if (value instanceof String[]) {
+                    out.append(Arrays.toString((String[]) value));
+                } else if (value instanceof CharSequence[]) {
+                    out.append(Arrays.toString((CharSequence[]) value));
+                } else if (value instanceof Parcelable[]) {
+                    out.append(Arrays.toString((Parcelable[]) value));
+                } else if (value instanceof Bundle) {
+                    out.append(bundleToString((Bundle) value));
+                } else {
+                    out.append(value);
+                }
 
-                MainActivity.getInstance().updateOnNotif(title, content);
-
-                Log.d(TAG, "Notification title:" + title + "\nNotification content:" + content);
-                Log.d(TAG, "NOTIFICATION_MESSAGE_RECEIVED End");
-
-            } else if (ACTION_NOTIFICATION_CLICK.equals(intent.getAction())) { // 4.4
-                Log.d(TAG, "### ACTION_NOTIFICATION_CLICK Begin 4.4");
-                int nid = intent.getIntExtra(EXTRA_MESSAGE_NID, 0);
-                String title = intent.getStringExtra(EXTRA_MESSAGE_TITLE);
-                String content = intent.getStringExtra(EXTRA_MESSAGE_CONTENT);
-                String dataJson = intent.getStringExtra(EXTRA_MESSAGE_DATA);
-
-                MainActivity.getInstance().updateOnNotifClick(title,content);
-
-                Log.d(TAG, "Notification id:" + nid + "Notification title:" + title + "\nNotitication content:" + content + "\nData:" + dataJson);
-                Log.d(TAG, "ACTION_NOTIFICATION_CLICK End");
-
-            } else if (ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED.equals(intent.getAction())) {
-                Log.d(TAG, "### ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED Begin 4.5");
-
-//                MediaMesageInfo mediaMesageInfo = StoreSdk.getInstance().getMediaMessage(context);
-//
-//                MainActivity.getInstance().updateOnMedia(mediaMesageInfo);
-
-                String mediaJson = intent.getStringExtra(EXTRA_MEIDA);
-
-                Log.d(TAG, "ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED End");
+                first = false;
             }
         }
+
+        out.append("]");
+        return out.toString();
     }
 
     public void clearAll(){
@@ -221,12 +204,12 @@ public class MainActivity extends AppCompatActivity {
         StoreSdk.getInstance().init(getApplicationContext(), helper.getAppKey(), helper.getAppSecret(), new BaseApiService.Callback() {
             @Override
             public void initSuccess() {
-                tv_message.setText("success");
+                Log.i(TAG, "initSuccess");
             }
 
             @Override
             public void initFailed(RemoteException e) {
-                tv_message.setText("failure");
+                Log.i(TAG, "initFail");
             }
         });
 
