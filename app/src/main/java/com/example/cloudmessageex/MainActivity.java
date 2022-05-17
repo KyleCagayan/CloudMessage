@@ -39,11 +39,77 @@ public class MainActivity extends AppCompatActivity {
         return ins;
     }
 
+    public void onNotif(final String title, final String content) {
+        MainActivity.this.runOnUiThread(() -> {
+            clearAll();
+            tv_message.setText("Notification");
+            tv_title.setText(title);
+            tv_content.setText(content);
+        });
+    }
+
+    public void onNotifClick(final String title, final String content){
+        onNotif(title, content);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void onData(final String title, final String content, final String dataJson){
+        MainActivity.this.runOnUiThread(() -> {
+            clearAll();
+            tv_message.setText("dataMsg");
+            tv_title.setText(title);
+            tv_content.setText(content);
+            tv_data.setText(dataJson);
+        });
+    }
+
+    public void onMixed(final String title, final String content, final String dataJson){
+        MainActivity.this.runOnUiThread(() -> {
+            clearAll();
+            tv_message.setText("dataMsg");
+            tv_title.setText(title);
+            tv_content.setText(content);
+        });
+    }
+
+    public void onMedia(MediaMesageInfo mediaMesageInfo){
+        MainActivity.this.runOnUiThread(() -> {
+            clearAll();
+            Glide.with(this).load(mediaMesageInfo.getImgUrl()).into(imageView);
+        });
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d(TAG, "onNewIntent called!");
         Log.d(TAG, "intent: " + intentToString(intent));
+
+        Log.d(TAG, "message: " + intent.getStringExtra("message"));
+        Log.d(TAG, "all extras: " + intent.getExtras());
+
+        switch(intent.getStringExtra("message")){
+            case "4.1":
+                //todo mixed message
+//                onMixed()
+                break;
+            case "4.2":
+                // todo data message
+                break;
+            case "4.3":
+                // todo notification received
+                break;
+            case "4.4":
+                // todo notification clicked
+                break;
+            case "4.5":
+                // todo media message
+                break;
+        }
+
 
     }
 
@@ -113,49 +179,6 @@ public class MainActivity extends AppCompatActivity {
             tv_data.setText("");
         });
     }
-
-    public void updateOnNotif(final String title, final String content) {
-        MainActivity.this.runOnUiThread(() -> {
-            clearAll();
-            tv_message.setText("Notification");
-            tv_title.setText(title);
-            tv_content.setText(content);
-        });
-    }
-
-    public void updateOnNotifClick(final String title, final String content){
-        updateOnNotif(title, content);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
-    public void updateOnData(final String title, final String content, final String dataJson){
-        MainActivity.this.runOnUiThread(() -> {
-            clearAll();
-            tv_message.setText("dataMsg");
-            tv_title.setText(title);
-            tv_content.setText(content);
-            tv_data.setText(dataJson);
-        });
-    }
-
-    public void updateOnMixed(final String title, final String content, final String dataJson){
-        MainActivity.this.runOnUiThread(() -> {
-            clearAll();
-            tv_message.setText("dataMsg");
-            tv_title.setText(title);
-            tv_content.setText(content);
-        });
-    }
-
-    public void updateOnMedia(MediaMesageInfo mediaMesageInfo){
-        MainActivity.this.runOnUiThread(() -> {
-            clearAll();
-            Glide.with(this).load(mediaMesageInfo.getImgUrl()).into(imageView);
-        });
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,9 +190,6 @@ public class MainActivity extends AppCompatActivity {
 //        tv_message = findViewById(R.id.tv_message);
 //        tv_data = findViewById(R.id.tv_data);
         br=new PushMessageReceiver(handler);
-
-//        imageView = findViewById(R.id.imageView);
-
         initPaxStoreSdk();
     }
 
@@ -213,9 +233,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Notifications.I.init(getApplicationContext())
-                .setSmallIcon(R.drawable.logo_demo_white)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.logo_demo));
+
+        // todo fix notification icons
+//        Notifications.I.init(getApplicationContext())
+//                .setSmallIcon(R.drawable.logo_demo_white)
+//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.logo_demo));
         // disable the Notifications we provided through below code.
         // Notifications.I.setEnabled(false);
     }

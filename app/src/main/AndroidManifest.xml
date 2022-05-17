@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.CloudMessageEx">
 
-        <receiver android:name="MainActivity$PushMessageReceiver"
+        <receiver android:name=".PushMessageReceiver"
             android:enabled="true"
             android:exported="true"
             android:launchMode="singleTop">

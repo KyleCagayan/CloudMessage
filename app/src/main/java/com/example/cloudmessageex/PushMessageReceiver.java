@@ -18,14 +18,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
-class PushMessageReceiver extends BroadcastReceiver {
+public class PushMessageReceiver extends BroadcastReceiver {
 
     private static final String TAG = "CloudMessagingEx";
     private Handler handler = null;
     private TextView tv_message;
     private boolean defaultConstructorFlag = false;
-
-
 
     public PushMessageReceiver() {
         Log.d(TAG, "Broadcast receiver default constructor method called");
@@ -51,6 +49,7 @@ class PushMessageReceiver extends BroadcastReceiver {
             String content = intent.getStringExtra(EXTRA_MESSAGE_CONTENT);
             String dataJson = intent.getStringExtra(EXTRA_MESSAGE_DATA);
 
+            intent2open.putExtra("message", "4.1");
             intent2open.putExtra("title", title);
             intent2open.putExtra("content", content);
             intent2open.putExtra("dataJson", dataJson);
@@ -64,6 +63,7 @@ class PushMessageReceiver extends BroadcastReceiver {
             String title = intent.getStringExtra(EXTRA_MESSAGE_TITLE);
             String content = intent.getStringExtra(EXTRA_MESSAGE_CONTENT);
 
+            intent2open.putExtra("message", "4.2");
             intent2open.putExtra("title", title);
             intent2open.putExtra("content", content);
             intent2open.putExtra("dataJson", dataJson);
@@ -80,6 +80,7 @@ class PushMessageReceiver extends BroadcastReceiver {
             String content = intent.getStringExtra(EXTRA_MESSAGE_CONTENT);
 
 
+            intent2open.putExtra("message", "4.3");
             intent2open.putExtra("title", title);
             intent2open.putExtra("content", content);
 //            MainActivity.getInstance().updateOnNotif(title, content);
@@ -94,6 +95,7 @@ class PushMessageReceiver extends BroadcastReceiver {
             String content = intent.getStringExtra(EXTRA_MESSAGE_CONTENT);
             String dataJson = intent.getStringExtra(EXTRA_MESSAGE_DATA);
 
+            intent2open.putExtra("message", "4.4");
             intent2open.putExtra("title", title);
             intent2open.putExtra("content", content);
             intent2open.putExtra("dataJson", dataJson);
@@ -113,6 +115,7 @@ class PushMessageReceiver extends BroadcastReceiver {
             String mediaJson = intent.getStringExtra(EXTRA_MEIDA);
             Log.d(TAG, "mediaJson:" + mediaJson);
 
+            intent2open.putExtra("message", "4.5");
             intent2open.putExtra("mediaJson", mediaJson);
 
             Log.d(TAG, "ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED End");
