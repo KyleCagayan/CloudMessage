@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CloudMessageEx</string>
+    <string name="label_banner_title" />
+    <string name="label_banner_text" />
+    <string name="label_param_detail" />
+    <string name="label_no_data" />
+    <string name="label_version_text" />
+    <string name="label_copyright_text" />
+</resources>
