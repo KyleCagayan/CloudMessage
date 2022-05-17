@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/drawable-v24/api.xml" value="0.22864583333333333" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/drawable-v24/goinsight.xml" value="0.22864583333333333" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/drawable-v24/push.xml" value="0.22864583333333333" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/drawable-v24/radio_txt.xml" value="0.22864583333333333" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/activity_base_application.xml" value="0.21979166666666666" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/activity_generate_data.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/activity_goinsight.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/api.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/cloud_msg_dialog.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/cloud_msg_list_item.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/data_item.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/dialog_loading_layout.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/go.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/launcher.xml" value="0.3880208333333333" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/list_header.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/more_pop.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/no_data.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/param_detail_list_item.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/layout/push.xml" value="0.2125" />
+        <entry key="..\:/Users/kyle.cagayan/AndroidStudioProjects/CloudMessageEx/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22864583333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
