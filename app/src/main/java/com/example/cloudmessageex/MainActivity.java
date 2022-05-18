@@ -9,7 +9,9 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -28,33 +30,29 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "CloudMessagingDemo";
     private Helper helper = new Helper();
 
-    TextView  tv_message, tv_title, tv_content, tv_data;
+    TextView tv_message, tv_title, tv_content, tv_data;
     BroadcastReceiver br;
     Handler handler = new Handler();
     private static MainActivity ins;
 
     ImageView imageView;
 
-    public static MainActivity  getInstance(){
+    public static MainActivity getInstance() {
         return ins;
     }
 
-    public void onNotif(final String title, final String content) {
-        MainActivity.this.runOnUiThread(() -> {
-            clearAll();
-            tv_message.setText("Notification");
-            tv_title.setText(title);
-            tv_content.setText(content);
-        });
+    public void onNotif(Intent intent) {
+        Log.d(TAG, "notification received");
+        tv_title.setText(intent.getStringExtra("title"));
+        tv_content.setText(intent.getStringExtra("content"));
     }
 
-    public void onNotifClick(final String title, final String content){
-        onNotif(title, content);
+    public void onNotifClick(final String title, final String content) {
+//        onNotif(title, content);
         Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
-    public void onData(final String title, final String content, final String dataJson){
+    public void onData(final String title, final String content, final String dataJson) {
         MainActivity.this.runOnUiThread(() -> {
             clearAll();
             tv_message.setText("dataMsg");
@@ -64,22 +62,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void onMixed(final String title, final String content, final String dataJson){
-        MainActivity.this.runOnUiThread(() -> {
-            clearAll();
-            tv_message.setText("dataMsg");
-            tv_title.setText(title);
-            tv_content.setText(content);
-        });
+    public void onMixed(Bundle bundle) {
+//        MainActivity.this.runOnUiThread(() -> {
+//            clearAll();
+//            tv_message.setText("dataMsg");
+//            tv_title.setText(title);
+//            tv_content.setText(content);
+//        });
+
+
     }
 
-    public void onMedia(MediaMesageInfo mediaMesageInfo){
+    public void onMedia(Intent intent) {
         MainActivity.this.runOnUiThread(() -> {
-            clearAll();
-            Glide.with(this).load(mediaMesageInfo.getImgUrl()).into(imageView);
+//            Glide.with(this).load(mediaMesageInfo.getImgUrl()).into(imageView);
         });
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, MainActivity.class);
+//        startActivity(intent);
     }
 
     @Override
@@ -87,23 +86,21 @@ public class MainActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         Log.d(TAG, "onNewIntent called!");
         Log.d(TAG, "intent: " + intentToString(intent));
-
-        Log.d(TAG, "message: " + intent.getStringExtra("message"));
         Log.d(TAG, "all extras: " + intent.getExtras());
 
-        switch(intent.getStringExtra("message")){
+        switch (intent.getStringExtra("message")) {
             case "4.1":
                 //todo mixed message
-//                onMixed()
+                onMixed(intent.getExtras());
                 break;
             case "4.2":
                 // todo data message
                 break;
-            case "4.3":
-                // todo notification received
-                break;
             case "4.4":
                 // todo notification clicked
+            case "4.3":
+                // todo notification received
+                onNotif(intent);
                 break;
             case "4.5":
                 // todo media message
@@ -171,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         return out.toString();
     }
 
-    public void clearAll(){
+    public void clearAll() {
         MainActivity.this.runOnUiThread(() -> {
             tv_message.setText("");
             tv_title.setText("");
@@ -179,17 +176,17 @@ public class MainActivity extends AppCompatActivity {
             tv_data.setText("");
         });
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ins = this;
-        tv_title=findViewById(R.id.tv_title);
-        tv_content=findViewById(R.id.tv_content);
+        tv_title = findViewById(R.id.tv_title);
+        tv_content = findViewById(R.id.tv_content);
 //        tv_message = findViewById(R.id.tv_message);
 //        tv_data = findViewById(R.id.tv_data);
-        br=new PushMessageReceiver(handler);
+        br = new PushMessageReceiver(handler);
         initPaxStoreSdk();
     }
 
@@ -247,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(br);
         super.onDestroy();
     }
-
 
 
 }
