@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "CloudMessagingDemo";
+    private static final String TAG = "CloudMessagingEx";
     private Helper helper = new Helper();
 
     TextView tv_message, tv_title, tv_content, tv_data;
@@ -73,21 +73,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onMedia(Intent intent) {
-        MainActivity.this.runOnUiThread(() -> {
-//            Glide.with(this).load(mediaMesageInfo.getImgUrl()).into(imageView);
-        });
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
+    public void onMedia(String template, String imgUrl) {
+        Intent toMediaMsgIntent = new Intent(this, MediaMessage1.class);
+        toMediaMsgIntent.putExtra("template", template);
+        toMediaMsgIntent.putExtra("imgUrl", imgUrl);
+        startActivity(toMediaMsgIntent);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d(TAG, "onNewIntent called!");
-        Log.d(TAG, "intent: " + intentToString(intent));
-        Log.d(TAG, "all extras: " + intent.getExtras());
-
         switch (intent.getStringExtra("message")) {
             case "4.1":
                 //todo mixed message
@@ -104,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "4.5":
                 // todo media message
+                String template = intent.getStringExtra("template");
+                String imgUrl = intent.getStringExtra("imgurl");
+                onMedia(template, imgUrl);
                 break;
         }
 

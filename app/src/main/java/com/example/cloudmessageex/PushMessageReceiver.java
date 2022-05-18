@@ -18,6 +18,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.pax.market.android.app.sdk.StoreSdk;
+import com.pax.market.android.app.sdk.dto.MediaMesageInfo;
+
 public class PushMessageReceiver extends BroadcastReceiver {
 
     private static final String TAG = "CloudMessagingEx";
@@ -30,7 +33,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
         defaultConstructorFlag = true;
     }
 
-    public PushMessageReceiver(android.os.Handler handler){ //, TextView tv_message
+    public PushMessageReceiver(android.os.Handler handler) { //, TextView tv_message
         this.handler = handler;
     }
 
@@ -70,7 +73,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
 
 //            MainActivity.getInstance().updateOnData(title, content, dataJson);
 
-            Log.d(TAG,"DATA_MESSAGE_RECEIVED Begin\nData:" + dataJson + "\nDATA_MESSAGE_RECEIVED End");
+            Log.d(TAG, "DATA_MESSAGE_RECEIVED Begin\nData:" + dataJson + "\nDATA_MESSAGE_RECEIVED End");
             Log.d(TAG, "NOTIFY_DATA_MESSAGE_RECEIVED End");
 
         } else if (ACTION_NOTIFICATION_MESSAGE_RECEIVED.equals(intent.getAction())) {  // 4.3
@@ -108,19 +111,16 @@ public class PushMessageReceiver extends BroadcastReceiver {
         } else if (ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "### ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED Begin 4.5");
 
-//                MediaMesageInfo mediaMesageInfo = StoreSdk.getInstance().getMediaMessage(context);
-//
+            MediaMesageInfo mediaMesageInfo = StoreSdk.getInstance().getMediaMessage(context);
 //                MainActivity.getInstance().updateOnMedia(mediaMesageInfo);
 
-            String mediaJson = intent.getStringExtra(EXTRA_MEIDA);
-            Log.d(TAG, "mediaJson:" + mediaJson);
-
             intent2open.putExtra("message", "4.5");
-            intent2open.putExtra("mediaJson", mediaJson);
+            intent2open.putExtra("template", mediaMesageInfo.getTemplate());
+            intent2open.putExtra("imgUrl", mediaMesageInfo.getImgUrl());
 
             Log.d(TAG, "ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED End");
         }
 
         context.startActivity(intent2open);
-    } // onReceive End
+    } // onReceive End?
 }
