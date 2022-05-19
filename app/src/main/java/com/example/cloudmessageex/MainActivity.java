@@ -24,32 +24,23 @@ import com.pax.market.android.app.sdk.StoreSdk;
 import com.pax.market.android.app.sdk.dto.MediaMesageInfo;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "CloudMessagingEx";
-    private Helper helper = new Helper();
+    private final Helper helper = new Helper();
 
     TextView tv_message, tv_title, tv_content, tv_data;
     BroadcastReceiver br;
     Handler handler = new Handler();
-    private static MainActivity ins;
-
-    ImageView imageView;
-
-    public static MainActivity getInstance() {
-        return ins;
-    }
 
     public void onNotif(Intent intent) {
         Log.d(TAG, "notification received");
         tv_title.setText(intent.getStringExtra("title"));
         tv_content.setText(intent.getStringExtra("content"));
-    }
-
-    public void onNotifClick(final String title, final String content) {
-//        onNotif(title, content);
-        Intent intent = new Intent(this, MainActivity.class);
+        tv_data.setText("");
     }
 
     public void onData(final String title, final String content, final String dataJson) {
@@ -63,18 +54,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onMixed(Bundle bundle) {
-//        MainActivity.this.runOnUiThread(() -> {
-//            clearAll();
-//            tv_message.setText("dataMsg");
-//            tv_title.setText(title);
-//            tv_content.setText(content);
-//        });
 
 
     }
 
     public void onMedia(String template, String imgUrl) {
-        Intent toMediaMsgIntent = new Intent(this, MediaMessage1.class);
+        Intent toMediaMsgIntent = new Intent(getApplicationContext(), MediaMessage1.class);
         toMediaMsgIntent.putExtra("template", template);
         toMediaMsgIntent.putExtra("imgUrl", imgUrl);
         startActivity(toMediaMsgIntent);
@@ -83,26 +68,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        dumpIntent(intent);
         Log.d(TAG, "onNewIntent called!");
+        Log.d(TAG, intent.getStringExtra("message"));
         switch (intent.getStringExtra("message")) {
             case "4.1":
-                //todo mixed message
-                onMixed(intent.getExtras());
+                // todo mixed message
+//                onMixed(intent.getExtras());
                 break;
             case "4.2":
                 // todo data message
                 break;
             case "4.4":
-                // todo notification clicked
+                // notification clicked
             case "4.3":
-                // todo notification received
+                // notification received
                 onNotif(intent);
                 break;
             case "4.5":
-                // todo media message
+                // media message
+                dumpIntent(intent);
                 String template = intent.getStringExtra("template");
-                String imgUrl = intent.getStringExtra("imgurl");
-                onMedia(template, imgUrl);
+                if (template.equals("0")){
+                    String imgUrl = intent.getStringExtra("imgUrl");
+                    System.out.println("ASDFASDFASDF: " + template + " " + imgUrl);
+                    onMedia(template, imgUrl);
+                }
+                else if (template.equals("1")) {
+                    // dialogue pop up
+
+                }
+                else if (template.equals("2")) {
+                    // dialogue popup with title
+                    
+                }
+
                 break;
         }
 
@@ -180,11 +180,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ins = this;
+
         tv_title = findViewById(R.id.tv_title);
         tv_content = findViewById(R.id.tv_content);
-//        tv_message = findViewById(R.id.tv_message);
-//        tv_data = findViewById(R.id.tv_data);
+        tv_data = findViewById(R.id.tv_data);
+
         br = new PushMessageReceiver(handler);
         initPaxStoreSdk();
     }
@@ -205,14 +205,6 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction("com.paxstore.mpush.EXTRA_MESSAGE_TITLE");
 
         registerReceiver(br, filter);
-
-//        Notifications.I.init(getApplicationContext()).setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.logo_demo));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(br);
     }
 
     private void initPaxStoreSdk() {
@@ -228,8 +220,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "initFail");
             }
         });
-
-
         // todo fix notification icons
 //        Notifications.I.init(getApplicationContext())
 //                .setSmallIcon(R.drawable.logo_demo_white)
@@ -240,10 +230,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "App destroyed");
         unregisterReceiver(br);
         super.onDestroy();
     }
 
+    public static void dumpIntent(Intent i) {
+
+        Bundle bundle = i.getExtras();
+        if (bundle != null) {
+            Set<String> keys = bundle.keySet();
+            Iterator<String> it = keys.iterator();
+            Log.e(TAG, "Dumping Intent start");
+            while (it.hasNext()) {
+                String key = it.next();
+                Log.e(TAG, "[" + key + "=" + bundle.get(key) + "]");
+            }
+            Log.e(TAG, "Dumping Intent end");
+        }
+    }
 
 }
 

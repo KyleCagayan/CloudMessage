@@ -112,15 +112,18 @@ public class PushMessageReceiver extends BroadcastReceiver {
             Log.d(TAG, "### ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED Begin 4.5");
 
             MediaMesageInfo mediaMesageInfo = StoreSdk.getInstance().getMediaMessage(context);
-//                MainActivity.getInstance().updateOnMedia(mediaMesageInfo);
+
+            System.out.println(mediaMesageInfo);
+            System.out.println("imgUrl: " + mediaMesageInfo.getImgUrl());
+            System.out.println("linkUrl: " + mediaMesageInfo.getLinkUrl());
 
             intent2open.putExtra("message", "4.5");
-            intent2open.putExtra("template", mediaMesageInfo.getTemplate());
+            intent2open.putExtra("template", String.valueOf(mediaMesageInfo.getTemplate()));
             intent2open.putExtra("imgUrl", mediaMesageInfo.getImgUrl());
 
             Log.d(TAG, "ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED End");
         }
 
         context.startActivity(intent2open);
-    } // onReceive End?
+    } // onReceive End
 }
