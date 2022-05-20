@@ -1,15 +1,20 @@
 package com.example.cloudmessageex;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.IntentFilter;
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView tv_message, tv_title, tv_content, tv_data;
     BroadcastReceiver br;
+    Dialog dialog;
     Handler handler = new Handler();
 
     public void onNotif(Intent intent) {
@@ -43,41 +49,36 @@ public class MainActivity extends AppCompatActivity {
         tv_data.setText("");
     }
 
-    public void onData(final String title, final String content, final String dataJson) {
-        MainActivity.this.runOnUiThread(() -> {
-            clearAll();
-            tv_message.setText("dataMsg");
-            tv_title.setText(title);
+    public void onData(final String content) {
+            tv_title.setText("");
             tv_content.setText(content);
-            tv_data.setText(dataJson);
-        });
+            tv_data.setText("");
     }
 
-    public void onMixed(Bundle bundle) {
+    public void onMixed(Bundle bundle) { }
 
-
-    }
-
-    public void onMedia(String template, String imgUrl) {
+    public void onMedia(String template, String imgUrl, String title) {
         Intent toMediaMsgIntent = new Intent(getApplicationContext(), MediaMessage1.class);
         toMediaMsgIntent.putExtra("template", template);
         toMediaMsgIntent.putExtra("imgUrl", imgUrl);
+        toMediaMsgIntent.putExtra("title", title);
         startActivity(toMediaMsgIntent);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        dumpIntent(intent);
         Log.d(TAG, "onNewIntent called!");
         Log.d(TAG, intent.getStringExtra("message"));
         switch (intent.getStringExtra("message")) {
             case "4.1":
                 // todo mixed message
-//                onMixed(intent.getExtras());
+                onMixed(intent.getExtras());
                 break;
             case "4.2":
-                // todo data message
+                // data message
+                String content = intent.getStringExtra("dataJson");
+                onData(content);
                 break;
             case "4.4":
                 // notification clicked
@@ -87,21 +88,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "4.5":
                 // media message
-                dumpIntent(intent);
                 String template = intent.getStringExtra("template");
-                if (template.equals("0")){
-                    String imgUrl = intent.getStringExtra("imgUrl");
-                    System.out.println("ASDFASDFASDF: " + template + " " + imgUrl);
-                    onMedia(template, imgUrl);
-                }
-                else if (template.equals("1")) {
-                    // dialogue pop up
-
-                }
-                else if (template.equals("2")) {
-                    // dialogue popup with title
-                    
-                }
+                String imgUrl = intent.getStringExtra("imgUrl");
+                String title = intent.getStringExtra("title");
+                onMedia(template, imgUrl, title);
 
                 break;
         }
@@ -167,15 +157,6 @@ public class MainActivity extends AppCompatActivity {
         return out.toString();
     }
 
-    public void clearAll() {
-        MainActivity.this.runOnUiThread(() -> {
-            tv_message.setText("");
-            tv_title.setText("");
-            tv_content.setText("");
-            tv_data.setText("");
-        });
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
         br = new PushMessageReceiver(handler);
         initPaxStoreSdk();
+
     }
 
     @Override

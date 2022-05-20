@@ -53,9 +53,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
             String dataJson = intent.getStringExtra(EXTRA_MESSAGE_DATA);
 
             intent2open.putExtra("message", "4.1");
-            intent2open.putExtra("title", title);
             intent2open.putExtra("content", content);
-            intent2open.putExtra("dataJson", dataJson);
 
             Log.d(TAG, "Notification title: " + title + "\nNotitication content: " + content + "\nData: " + dataJson);
             Log.d(TAG, "NOTIFY_DATA_MESSAGE_RECEIVED End");
@@ -70,8 +68,6 @@ public class PushMessageReceiver extends BroadcastReceiver {
             intent2open.putExtra("title", title);
             intent2open.putExtra("content", content);
             intent2open.putExtra("dataJson", dataJson);
-
-//            MainActivity.getInstance().updateOnData(title, content, dataJson);
 
             Log.d(TAG, "DATA_MESSAGE_RECEIVED Begin\nData:" + dataJson + "\nDATA_MESSAGE_RECEIVED End");
             Log.d(TAG, "NOTIFY_DATA_MESSAGE_RECEIVED End");
@@ -120,6 +116,7 @@ public class PushMessageReceiver extends BroadcastReceiver {
             intent2open.putExtra("message", "4.5");
             intent2open.putExtra("template", String.valueOf(mediaMesageInfo.getTemplate()));
             intent2open.putExtra("imgUrl", mediaMesageInfo.getImgUrl());
+            intent2open.putExtra("title", mediaMesageInfo.getTitle());
 
             Log.d(TAG, "ACTION_NOTIFY_MEDIA_MESSAGE_RECEIVED End");
         }

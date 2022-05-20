@@ -5,6 +5,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +16,7 @@ public class MediaMessage1 extends AppCompatActivity {
     public static final String TAG = "CloudMessageEx";
 
     ImageView imageView;
+    TextView mediaTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +24,12 @@ public class MediaMessage1 extends AppCompatActivity {
         setContentView(R.layout.activity_media1);
 
         imageView = findViewById(R.id.imageView);
-
+        mediaTitle = findViewById(R.id.tv_mediaTitle);
         Bundle extras = getIntent().getExtras();
         String imgUrl = extras.getString("imgUrl");
         setImageView(imgUrl);
+
+        mediaTitle.setText(extras.getString("title"));
 
     }
 
